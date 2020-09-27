@@ -25,7 +25,6 @@ var sum = function(array) {
   if (array.length === 1) {
     return array[0];
   }
-
   return array[0] + sum(array.slice(1));
 };
 
@@ -600,25 +599,25 @@ var tagCount = function(tag, node) {
 // var array = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
 // binarySearch(array, 5) // 5
 // https://www.khanacademy.org/computing/computer-science/algorithms/binary-search/a/binary-search
-var binarySearch = function(array, target, min, max) {
-  if (min === undefined && max === undefined) {
-    min = Math.floor((array.length) / 4);
-    max = Math.floor(array.length / 2) + min;
-  }
-  if (array[min] === target) { return min; }
-  if (array[max] === target) { return max; }
-  if (min >= max) { return null;}
+var binarySearch = function(array, target) {
+  //Returns an index not a value while also not using parameters for min and max
+  var max = Math.floor(array.length * .75);
+  var min = Math.floor(array.length * .25);
 
-  if (array[min] > target) {
-    max = min + 1;
-    min = Math.floor(min / 2) - 1; // if max is 0 sets min to inifinity
-  }
-  if (array[max] < target) {
-    min = max - 1;
-    max = Math.floor((array.length + max) / 2) + 1;
-  }
-  return binarySearch(array, target, min+1, max-1);
+  if (min === max) { return array[min] === target ? 0 : null; }//min is always 0 search ends here
 
+  if (array[min] < target && array[max] > target) {
+    var result = binarySearch(array.slice(min+1, max), target);
+    return result !== null ? min + 1 + result : null;
+  }
+  if (array[min] >= target) {
+    var result = binarySearch(array.slice(0, min+1), target);
+    return result !== null ? result: null;
+  }
+  if (array[max] <= target) {
+    var result = binarySearch(array.slice(max), target);
+    return result !== null ? max + result : null;
+  }
 };
 
 // 39. Write a merge sort function.
@@ -669,7 +668,6 @@ var mergeSort = function(array) {
 // console.log(obj2); // {a:1,b:{bb:{bbb:2}},c:3}
 // obj1 === obj2 // false
 var clone = function(input) {
-
   if (!Array.isArray(input)) {
     var obj = {};
     for (key in input) {
